@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="es">
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>3 guías gratis para conversar con una mujer | DADAFSI</title>
+<meta name="description" content="Descarga gratis el Manual del PIMP, la guía completa de conversación y Qué decirle a una chica. Acceso inmediato.">
+<meta property="og:title" content="3 guías gratis para conversar con una mujer">
+<meta property="og:description" content="Manual del PIMP, guía completa de conversación y Qué decirle a una chica. Acceso inmediato.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#1C1612">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..500&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css">
+<script src="/assets/config.js"></script>
+</head>
+<body>
+<div class="marco">
+  <header class="barra">
+    <a href="https://instagram.com/dadafsi" rel="noopener">@dadafsi</a>
+    <span>Acceso inmediato</span>
+  </header>
+
+  <main>
+    <h1 class="titular">3 guías gratis para aprender a conversar con una mujer y mantener su interés</h1>
+    <p class="intro">Llévate el <strong>Manual del PIMP</strong>, la <strong>guía completa de conversación</strong> y <strong>Qué decirle a una chica</strong>. Úsalas para dejar de improvisar y entender qué hacer en cada etapa.</p>
+
+    <dl class="ficha">
+      <div class="ficha__fila">
+        <dt>Guía 1</dt>
+        <dd>Qué decir cuando no sabes cómo empezar o continuar.</dd>
+      </div>
+      <div class="ficha__fila">
+        <dt>Guía 2</dt>
+        <dd>Cómo llevar la conversación sin perseguir ni explicar de más.</dd>
+      </div>
+      <div class="ficha__fila">
+        <dt>Guía 3</dt>
+        <dd>Cómo pasar del chat a una interacción con intención.</dd>
+      </div>
+    </dl>
+
+    <section class="reserva" id="reserva" aria-labelledby="titulo-reserva">
+      <h2 id="titulo-reserva">Dime a dónde te las mando</h2>
+      <p class="cupos" id="cupos" aria-live="polite"></p>
+
+      <form id="form" novalidate>
+        <div class="campo">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="nombre" type="text" autocomplete="given-name" required maxlength="80">
+        </div>
+        <div class="campo">
+          <label for="correo">Correo</label>
+          <input id="correo" name="correo" type="email" autocomplete="email" inputmode="email" required maxlength="120">
+          <div class="ayuda">Ahí te mando el acceso a las guías.</div>
+        </div>
+        <div class="campo">
+          <label for="pais">País donde vives</label>
+          <select id="pais" name="pais" required></select>
+        </div>
+        <div class="campo">
+          <label for="whatsapp">WhatsApp</label>
+          <div class="tel">
+            <input id="codigo" name="codigo" type="text" inputmode="tel" aria-label="Código de país" class="tel__codigo" maxlength="5">
+            <input id="whatsapp" name="whatsapp" type="tel" autocomplete="tel-national" inputmode="tel" required maxlength="20">
+          </div>
+          <div class="ayuda">Con el código de tu país. Por si el correo no llega.</div>
+        </div>
+
+        <div class="trampa" aria-hidden="true">
+          <label for="empresa">Empresa</label>
+          <input id="empresa" name="empresa" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <label class="acepto">
+          <input id="acepto" type="checkbox" required>
+          <span>Acepto que DADAFSI guarde mis datos para enviarme estas guías y información de sus programas por correo y WhatsApp. Puedo pedir que los borren cuando quiera.</span>
+        </label>
+
+        <button class="boton" id="enviar" type="submit">QUIERO LAS 3 GUÍAS GRATIS</button>
+        <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    DADAFSI. Si tienes dudas, escríbeme por Instagram a <a href="https://instagram.com/dadafsi" rel="noopener">@dadafsi</a>.
+  </footer>
+</div>
+
+<script>
+(function () {
+  var C = window.CLASE;
+
+  var f = { tz: (Intl.DateTimeFormat().resolvedOptions().timeZone || '') };
+
+  /* Países (ISO, nombre, indicativo) */
+  var PAISES = [
+    ['CO','Colombia','57'],['MX','México','52'],['US','Estados Unidos','1'],
+    ['AR','Argentina','54'],['CL','Chile','56'],['PE','Perú','51'],
+    ['EC','Ecuador','593'],['VE','Venezuela','58'],['ES','España','34'],
+    ['GT','Guatemala','502'],['HN','Honduras','504'],['SV','El Salvador','503'],
+    ['NI','Nicaragua','505'],['CR','Costa Rica','506'],['PA','Panamá','507'],
+    ['DO','República Dominicana','1'],['PR','Puerto Rico','1'],['CU','Cuba','53'],
+    ['BO','Bolivia','591'],['PY','Paraguay','595'],['UY','Uruguay','598'],
+    ['CA','Canadá','1'],['OT','Otro país','']
+  ];
+  var TZ_PAIS = {
+    'America/Bogota':'CO','America/Mexico_City':'MX','America/Monterrey':'MX','America/Tijuana':'MX',
+    'America/Cancun':'MX','America/Merida':'MX','America/Chihuahua':'MX','America/Hermosillo':'MX',
+    'America/New_York':'US','America/Chicago':'US','America/Denver':'US','America/Los_Angeles':'US',
+    'America/Phoenix':'US','America/Detroit':'US','America/Anchorage':'US','Pacific/Honolulu':'US',
+    'America/Argentina/Buenos_Aires':'AR','America/Buenos_Aires':'AR','America/Santiago':'CL',
+    'America/Lima':'PE','America/Guayaquil':'EC','America/Caracas':'VE','Europe/Madrid':'ES',
+    'America/Guatemala':'GT','America/Tegucigalpa':'HN','America/El_Salvador':'SV','America/Managua':'NI',
+    'America/Costa_Rica':'CR','America/Panama':'PA','America/Santo_Domingo':'DO','America/Puerto_Rico':'PR',
+    'America/Havana':'CU','America/La_Paz':'BO','America/Asuncion':'PY','America/Montevideo':'UY',
+    'America/Toronto':'CA','America/Vancouver':'CA'
+  };
+  var sel = document.getElementById('pais');
+  var cod = document.getElementById('codigo');
+  var opt0 = document.createElement('option');
+  opt0.value = ''; opt0.textContent = 'Elige tu país'; sel.appendChild(opt0);
+  PAISES.forEach(function (p) {
+    var o = document.createElement('option');
+    o.value = p[0]; o.textContent = p[1]; o.dataset.cod = p[2];
+    sel.appendChild(o);
+  });
+  function ponerCodigo() {
+    var o = sel.options[sel.selectedIndex];
+    cod.value = o && o.dataset.cod ? '+' + o.dataset.cod : (sel.value === 'OT' ? '+' : '');
+  }
+  var adivinado = TZ_PAIS[f.tz];
+  if (adivinado) { sel.value = adivinado; }
+  ponerCodigo();
+  sel.addEventListener('change', ponerCodigo);
+
+  /* Origen del tráfico (?src=instagram, ?src=tiktok, etc.) */
+  function origen() {
+    var q = new URLSearchParams(location.search);
+    var src = q.get('src') || q.get('utm_source');
+    if (src) return src.toLowerCase();
+    var ua = navigator.userAgent || '';
+    if (/Instagram/i.test(ua)) return 'instagram';
+    if (/FBAN|FBAV/i.test(ua)) return 'facebook';
+    if (/musical_ly|TikTok|BytedanceWebview/i.test(ua)) return 'tiktok';
+    if (document.referrer) {
+      try { return new URL(document.referrer).hostname.replace('www.', ''); } catch (e) {}
+    }
+    return 'directo';
+  }
+
+  var form = document.getElementById('form');
+
+  /* Validación y envío */
+  var aviso = document.getElementById('aviso');
+  var boton = document.getElementById('enviar');
+
+  function marcarError(input, texto) {
+    var campo = input.closest('.campo') || input.closest('.acepto');
+    var previo = campo.querySelector('.error');
+    if (previo) previo.remove();
+    if (!texto) { input.removeAttribute('aria-invalid'); return false; }
+    input.setAttribute('aria-invalid', 'true');
+    var e = document.createElement('div');
+    e.className = 'error'; e.textContent = texto;
+    campo.appendChild(e);
+    return true;
+  }
+
+  function telefonoE164(codigo, numero, iso) {
+    var c = String(codigo).replace(/\D/g, '');
+    var n = String(numero).replace(/\D/g, '');
+    if (c && n.indexOf(c) === 0 && n.length > 10) n = n.slice(c.length);
+    n = n.replace(/^0+/, '');
+    if (iso === 'AR' && n.length === 10) n = '9' + n;
+    return c && n ? '+' + c + n : '';
+  }
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    aviso.textContent = ''; aviso.className = 'aviso';
+
+    var nombre = document.getElementById('nombre');
+    var correo = document.getElementById('correo');
+    var wa = document.getElementById('whatsapp');
+    var acepto = document.getElementById('acepto');
+
+    var errores = [
+      marcarError(nombre, nombre.value.trim().length < 2 ? 'Escribe tu nombre.' : ''),
+      marcarError(correo, /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(correo.value.trim()) ? '' : 'Revisa el correo: parece incompleto.'),
+      marcarError(sel, sel.value ? '' : 'Elige el país donde vives.'),
+      marcarError(wa, wa.value.replace(/\D/g, '').length >= 7 && cod.value.replace(/\D/g, '') ? '' : 'Escribe tu número de WhatsApp con el código de país.'),
+      marcarError(acepto, acepto.checked ? '' : 'Marca la casilla para poder reservar.')
+    ];
+    if (errores.some(Boolean)) {
+      var primero = form.querySelector('[aria-invalid="true"]');
+      if (primero) primero.focus();
+      return;
+    }
+    if (document.getElementById('empresa').value) return; // bot
+
+    if (!C.SCRIPT_URL) {
+      aviso.className = 'aviso aviso--error';
+      aviso.textContent = 'La entrega todavía no está activa. Intenta de nuevo en unos minutos.';
+      return;
+    }
+
+    var paisTxt = sel.options[sel.selectedIndex].textContent;
+    var datos = {
+      nombre: nombre.value.trim(),
+      correo: correo.value.trim().toLowerCase(),
+      pais: sel.value === 'OT' ? 'Otro' : paisTxt,
+      paisCodigo: sel.value === 'OT' ? '' : sel.value,
+      whatsapp: telefonoE164(cod.value, wa.value, sel.value),
+      origen: origen(),
+      imanplomo: C.TITULO,
+      campana: window.origenLead(),
+      zonaHoraria: f.tz,
+      acepto: true
+    };
+
+    boton.disabled = true;
+    boton.textContent = 'Enviando…';
+
+    fetch(C.SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(datos)
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || !d.ok) throw new Error('respuesta');
+        window.recordarNombre(datos.nombre);
+        // Meta: dejo datos validos. Este es el evento que optimiza la pauta.
+        fbOnce('track', 'Lead', { content_name: '3_guias', value: 0, currency: 'USD' });
+        location.href = '/gracias';
+      })
+      .catch(function () {
+        boton.disabled = false;
+        boton.textContent = 'QUIERO LAS 3 GUÍAS GRATIS';
+        aviso.className = 'aviso aviso--error';
+        aviso.textContent = 'No se pudo guardar tus datos. Revisa tu conexión y vuelve a tocar el botón.';
+      });
+  });
+})();
+</script>
+</body>
+</html>

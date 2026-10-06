@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tus 3 guías están listas | DADAFSI</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1C1612">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..500&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css">
+<script src="/assets/config.js"></script>
+</head>
+<body>
+<div class="marco">
+  <header class="barra">
+    <a href="https://instagram.com/dadafsi" rel="noopener">@dadafsi</a>
+    <span>Acceso inmediato</span>
+  </header>
+
+  <main>
+    <section class="visto" aria-label="Confirmación">
+      <div class="visto__msg" id="saludo">Listo.</div>
+      <div class="visto__estado"><span class="visto__check" aria-hidden="true">✓✓</span> Guías desbloqueadas</div>
+    </section>
+
+    <h1 id="titular">Listo. Tus 3 guías ya están aquí.</h1>
+    <p class="intro">Sigue los dos pasos de abajo. El segundo es el que de verdad mueve tu caso.</p>
+
+    <h2>Paso 1 — Descarga tus guías</h2>
+    <div class="botones" id="descargas"></div>
+    <p class="aviso" id="avisoDescargas" role="status" aria-live="polite"></p>
+
+    <h2>Paso 2 — Tu caso en concreto</h2>
+    <p class="intro">¿Sientes que leer las guías no es suficiente porque necesitas contarle tu caso a alguien que sepa exactamente qué mirar?</p>
+    <p class="intro intro--suave">Agenda una llamada de ayuda gratuita conmigo. Me cuentas qué pasó con esa chica o qué se te está dificultando con las mujeres, revisamos tu situación y te digo exactamente qué hacer a continuación.</p>
+
+    <div class="botones">
+      <a class="boton" id="llamada" href="#" rel="noopener">QUIERO MI LLAMADA DE AYUDA GRATIS</a>
+    </div>
+  </main>
+
+  <footer>
+    DADAFSI. Si algún botón no te abre, escríbeme por Instagram a <a href="https://instagram.com/dadafsi" rel="noopener">@dadafsi</a>.
+  </footer>
+</div>
+
+<script>
+(function () {
+  var n = window.nombreGuardado();
+  if (n) {
+    document.getElementById('saludo').textContent = 'Listo, ' + n + '.';
+    document.getElementById('titular').textContent = 'Listo, ' + n + '. Tus 3 guías ya están aquí.';
+  }
+
+  var caja = document.getElementById('descargas');
+  var aviso = document.getElementById('avisoDescargas');
+  var faltan = 0;
+
+  (window.GUIAS || []).forEach(function (g) {
+    var a = document.createElement('a');
+    a.className = 'boton boton--linea';
+    a.textContent = 'Descargar ' + g.titulo;
+    if (g.url) {
+      a.href = g.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.setAttribute('download', '');
+      a.addEventListener('click', function () {
+        if (typeof fbq === 'function') fbq('trackCustom', 'DescargaGuia', { guia: g.id });
+      });
+    } else {
+      faltan++;
+      a.href = '#';
+      a.setAttribute('aria-disabled', 'true');
+      a.style.opacity = '.45';
+      a.addEventListener('click', function (e) { e.preventDefault(); });
+    }
+    caja.appendChild(a);
+  });
+
+  if (faltan) {
+    aviso.className = 'aviso aviso--error';
+    aviso.textContent = 'Un momento: todavía estoy subiendo ' + (faltan === 1 ? 'una guía' : faltan + ' guías') + '. Escríbeme por Instagram y te las paso directo.';
+  }
+
+  var btn = document.getElementById('llamada');
+  btn.href = window.LLAMADA_URL || 'https://dadafsi.netlify.app/?src=guias';
+  btn.addEventListener('click', function () {
+    // Esto NO es Schedule. Schedule lo dispara el bot cuando la cita existe de verdad.
+    if (typeof fbq === 'function') fbq('trackCustom', 'ClicLlamada', { content_name: 'llamada_ayuda' });
+  });
+})();
+</script>
+</body>
+</html>
