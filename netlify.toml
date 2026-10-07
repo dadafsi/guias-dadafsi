@@ -7,6 +7,12 @@
   to = "/gracias.html"
   status = 200
 
+# /privacidad sirve privacidad.html
+[[redirects]]
+  from = "/privacidad"
+  to = "/privacidad.html"
+  status = 200
+
 # El código del Apps Script no se publica
 [[redirects]]
   from = "/apps-script/*"
