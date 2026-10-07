@@ -11,9 +11,8 @@ const IMAN = '3 guías para conversar con una mujer';
 
 const COLUMNAS = [
   'Fecha registro', 'Nombre', 'Correo', 'WhatsApp', 'País', 'Código país',
-  'Origen', 'Zona horaria', 'Autorizó datos',
-  'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'fbclid',
-  'Contactado', 'Respondió', 'Agendó', 'Asistió', 'Compró', 'Monto USD'
+  'Origen', 'Zona horaria', 'Autorizó datos', 'Enlace enviado',
+  'Asistió', 'Compró', 'Monto USD'
 ];
 const COL = {}; COLUMNAS.forEach((c, i) => COL[c] = i + 1);
 
@@ -23,12 +22,12 @@ function preparar() {
   Logger.log('Pestaña lista: ' + hoja.getName() + ' — inscritos: ' + contarInscritos_(hoja));
 }
 
-/* ---------- GET: solo para comprobar que el script responde ---------- */
+/* ---------- GET: solo para comprobar que el script responde (NO ejecutar a mano) ---------- */
 function doGet(e) {
   return json_({ ok: true, iman: IMAN });
 }
 
-/* ---------- POST: nuevo registro ---------- */
+/* ---------- POST: nuevo registro (NO ejecutar a mano) ---------- */
 function doPost(e) {
   let d;
   try { d = JSON.parse(e.postData.contents); } catch (err) { return json_({ ok: false, estado: 'datos_invalidos' }); }
@@ -40,6 +39,7 @@ function doPost(e) {
     return json_({ ok: false, estado: 'datos_invalidos' });
   }
 
+  let filaNum = 0;
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
@@ -62,26 +62,25 @@ function doPost(e) {
     fila[COL['Origen'] - 1] = limpiar_(d.origen, 40);
     fila[COL['Zona horaria'] - 1] = limpiar_(d.zonaHoraria, 60);
     fila[COL['Autorizó datos'] - 1] = 'Sí';
-    // De qué anuncio vino. Sin esto no se sabe qué campaña trae compradores.
-    const c = (d && typeof d.campana === 'object' && d.campana) ? d.campana : {};
-    fila[COL['utm_source'] - 1]   = limpiar_(c.utm_source || c.src || '', 60);
-    fila[COL['utm_medium'] - 1]   = limpiar_(c.utm_medium || '', 60);
-    fila[COL['utm_campaign'] - 1] = limpiar_(c.utm_campaign || '', 80);
-    fila[COL['utm_content'] - 1]  = limpiar_(c.utm_content || '', 80);
-    fila[COL['fbclid'] - 1]       = limpiar_(c.fbclid || '', 120);
-    fila[COL['Contactado'] - 1] = '';
-    fila[COL['Respondió'] - 1] = '';
-    fila[COL['Agendó'] - 1] = '';
+    fila[COL['Enlace enviado'] - 1] = '';   // se llena abajo, al mandar el correo
     fila[COL['Asistió'] - 1] = '';
     fila[COL['Compró'] - 1] = '';
     fila[COL['Monto USD'] - 1] = '';
     hoja.appendRow(fila.map(celdaSegura_));
+    filaNum = hoja.getLastRow();
     SpreadsheetApp.flush();
   } finally {
     lock.releaseLock();
   }
 
-  try { correoConfirmacion_(nombre, correo); } catch (err) { Logger.log('Correo no enviado: ' + err); }
+  // Manda el correo con las guías y anota en la hoja si salió bien
+  let enviado = false;
+  try { correoConfirmacion_(nombre, correo); enviado = true; }
+  catch (err) { Logger.log('Correo no enviado: ' + err); }
+  if (filaNum > 0) {
+    try { obtenerHoja_().getRange(filaNum, COL['Enlace enviado']).setValue(enviado ? 'Sí' : 'No'); } catch (err) {}
+  }
+
   return json_({ ok: true, estado: 'registrado' });
 }
 
@@ -95,7 +94,7 @@ function obtenerHoja_() {
       .setBackground('#1C1612').setFontColor('#D4B98C').setFontWeight('bold');
     hoja.setFrozenRows(1);
     hoja.getRange('D:D').setNumberFormat('@'); // WhatsApp como texto, conserva el +
-    // Columnas que llenas tú después de la clase, en otro color
+    // Columnas que llenas tú a mano después, en otro color
     hoja.getRange(1, COL['Asistió'], 1, 3).setBackground('#3A2E24');
     hoja.setColumnWidths(1, COLUMNAS.length, 140);
     hoja.setColumnWidth(COL['Correo'], 220);
@@ -107,7 +106,7 @@ function contarInscritos_(hoja) {
   return Math.max(0, hoja.getLastRow() - 1);
 }
 
-/* Los links de las guías viven aquí, en las propiedades del script:
+/* Los links de las guías viven en las propiedades del script:
    Configuración del proyecto → Propiedades del script → GUIA_1, GUIA_2, GUIA_3 */
 function correoConfirmacion_(nombre, correo) {
   const P = PropertiesService.getScriptProperties();
