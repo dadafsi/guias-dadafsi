@@ -9,7 +9,7 @@
   --acc-d: #6F1019;       /* claret oscuro (hover) */
   --oro: #B8976A;
   --error: #A8321F;
-  --serif: 'Bodoni Moda', 'Didot', 'Bodoni 72', 'Times New Roman', serif;
+  --serif: 'DM Serif Display', 'Georgia', 'Times New Roman', serif;
   --sans: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
   --col: 40rem;
   box-sizing: border-box;
@@ -53,9 +53,9 @@ main { max-width: var(--col); margin: 0 auto; }
 /* ---------- Titular ---------- */
 .titular {
   font-family: var(--serif);
-  font-weight: 600;
-  font-size: clamp(2.1rem, 7.4vw, 3.4rem);
-  line-height: 1.07;
+  font-weight: 400;
+  font-size: clamp(2rem, 7vw, 3.2rem);
+  line-height: 1.12;
   letter-spacing: -0.01em;
   margin: 3rem 0 1.1rem;
 }
@@ -75,7 +75,7 @@ main { max-width: var(--col); margin: 0 auto; }
 .prueba b { color: var(--tinta); font-weight: 600; }
 .prueba .estrellas { color: var(--oro); letter-spacing: 0.1em; margin-right: 0.4rem; white-space: nowrap; }
 
-h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 7vw, 2.75rem); line-height: 1.1; margin: 0 0 1.25rem; }
+h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2rem, 7vw, 2.75rem); line-height: 1.12; margin: 0 0 1.25rem; }
 
 /* ---------- Oferta: portadas + promesa ---------- */
 .oferta {
@@ -97,9 +97,9 @@ h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 7vw, 2.
   overflow: hidden;
 }
 .cover__br { font-size: 8.5px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.7; }
-.cover__kick { font-family: var(--serif); font-style: italic; font-size: 15px; margin-top: auto; }
-.cover__big { font-family: var(--serif); font-weight: 600; font-size: 40px; line-height: 0.95; letter-spacing: 0.01em; }
-.cover__t { font-family: var(--serif); font-weight: 600; font-size: 19px; line-height: 1.1; margin-top: auto; }
+.cover__kick { font-family: var(--serif); font-style: italic; font-size: 14px; margin-top: auto; }
+.cover__big { font-family: var(--serif); font-weight: 400; font-size: 36px; line-height: 0.98; letter-spacing: 0.01em; }
+.cover__t { font-family: var(--serif); font-weight: 400; font-size: 18px; line-height: 1.12; margin-top: auto; }
 .cover__s { font-family: var(--serif); font-style: italic; font-size: 12.5px; line-height: 1.25; margin-top: 7px; opacity: 0.92; }
 .cover__rule { width: 26px; height: 2px; margin: 9px 0 0; }
 
@@ -151,7 +151,7 @@ h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 7vw, 2.
   border-radius: 4px;
 }
 @media (min-width: 700px) { .reserva { padding: 2.25rem 2.5rem; } }
-.reserva h2 { font-family: var(--serif); font-weight: 600; font-size: 1.6rem; margin: 0 0 0.35rem; }
+.reserva h2 { font-family: var(--serif); font-weight: 400; font-size: 1.7rem; margin: 0 0 0.35rem; }
 .cupos { color: var(--acc); margin: 0 0 1.4rem; min-height: 1.2em; font-size: 0.9375rem; font-weight: 600; }
 
 .campo { margin-bottom: 1.1rem; }
@@ -212,7 +212,7 @@ input:focus, select:focus, button:focus-visible, a:focus-visible { outline: 2px 
 /* ---------- Página de gracias ---------- */
 .visto { margin: 3.5rem 0 2.5rem; }
 .visto__msg {
-  display: inline-block; font-family: var(--serif); font-style: italic; font-weight: 500;
+  display: inline-block; font-family: var(--serif); font-style: italic; font-weight: 400;
   font-size: clamp(3.25rem, 14vw, 6rem); line-height: 1; letter-spacing: -0.01em; color: var(--tinta);
 }
 .visto__estado { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.9rem; font-size: 0.875rem; color: var(--tinta2); }
