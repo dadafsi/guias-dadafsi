@@ -42,9 +42,9 @@ window.fbOnce = function (tipo, nombre, datos) {
    Reemplaza cada '' por la URL real del PDF (Netlify, Drive con enlace directo,
    donde sea). Mientras estén vacíos, los botones avisan que faltan. */
 window.GUIAS = [
-  { id: 'manual-pimp',   titulo: 'Manual del PIMP',                 url: '' },
-  { id: 'conversacion',  titulo: 'Guía completa de conversación',   url: '' },
-  { id: 'que-decirle',   titulo: 'Qué decirle a una chica',         url: '' }
+  { id: 'manual-pimp', titulo: 'Manual del PIMP',                      url: '/guias/manual-del-pimp.pdf' },
+  { id: 'como-hablar', titulo: 'Cómo hablar con una mujer',            url: '/guias/como-hablar-con-una-mujer.pdf' },
+  { id: 'como-leer',   titulo: 'Cómo leer la conversación',           url: '/guias/como-leer-la-conversacion.pdf' }
 ];
 
 /* A dónde lleva el botón de la llamada de ayuda */

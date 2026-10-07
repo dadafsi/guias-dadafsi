@@ -127,8 +127,8 @@ function correoConfirmacion_(nombre, correo) {
       'Aquí están, ' + nombre.split(' ')[0] + '.',
       '<p>Estas son las tres guías. Guarda este correo: aquí van a estar siempre.</p>' +
       boton(g1, 'Manual del PIMP') +
-      boton(g2, 'Guía completa de conversación') +
-      boton(g3, 'Qué decirle a una chica') +
+      boton(g2, 'Cómo hablar con una mujer') +
+      boton(g3, 'Cómo leer la conversación con una mujer') +
       '<p style="color:#A7998A">Si quieres que revisemos tu caso en concreto, respóndeme este correo contándome qué está pasando. Lo leo yo.</p>'
     )
   });
