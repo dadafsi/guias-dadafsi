@@ -5,7 +5,7 @@ window.CLASE = {
   // URL del Apps Script publicado como aplicación web (termina en /exec).
   // Mientras esté vacía, el formulario no deja registrarse.
   // Pega aquí la URL del Apps Script NUEVO (el de este embudo), termina en /exec
-  SCRIPT_URL: '',
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxNQ2pvCqggZNmHWR-kXbvDCax071WcBIogxwTUjvIPsVzLAoLCI0HR4NtZtXx0b_Uy/exec',
 
   // ID del Pixel de Meta (solo números). Vacío = no carga el pixel.
   PIXEL_ID: '1785944622649398',
