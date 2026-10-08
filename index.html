@@ -54,16 +54,16 @@
       <div class="promesa">
         <p class="promesa__intro">Déjame tu correo y descubre:</p>
         <ul class="bullets">
-          <li>Por qué te quedas en blanco justo cuando más quieres decir algo</li>
-          <li>El error que la hace perder el interés <em>(lo haces sin notarlo)</em></li>
-          <li>Qué responder cuando se hace la difícil o te pone a prueba</li>
+          <li>Cómo iniciar la conversación con la chica que te gusta</li>
+          <li>Qué responder para que ella no pierda el interés</li>
+          <li>Qué decir cuando se hace la difícil</li>
           <li>Cómo tener conversaciones con mujeres y mantenerlas interesadas</li>
         </ul>
       </div>
     </div>
 
     <section class="reserva" id="reserva" aria-labelledby="titulo-reserva">
-      <h2 id="titulo-reserva">Dime a dónde te las mando</h2>
+      <h2 id="titulo-reserva">Dime a dónde te las mando ahora mismo</h2>
 
       <form id="form" novalidate>
         <div class="campo">
@@ -103,7 +103,7 @@
             <path d="M12 7 C 46 5, 68 16, 60 41" stroke="#8E1526" stroke-width="4.5" fill="none" stroke-linecap="round"/>
             <path d="M60 44 L 49 33 L 66 30 Z" fill="#8E1526"/>
           </svg>
-          <button class="boton" id="enviar" type="submit">QUIERO LAS 3 GUÍAS GRATIS</button>
+          <button class="boton" id="enviar" type="submit">QUIERO LAS 3 GUÍAS GRATIS AHORA MISMO</button>
         </div>
         <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
         <p class="cierre">Acceso inmediato · 100% gratis · Sin compromiso</p>
@@ -267,7 +267,7 @@
       })
       .catch(function () {
         boton.disabled = false;
-        boton.textContent = 'QUIERO LAS 3 GUÍAS GRATIS';
+        boton.textContent = 'QUIERO LAS 3 GUÍAS GRATIS AHORA MISMO';
         aviso.className = 'aviso aviso--error';
         aviso.textContent = 'No se pudo guardar tus datos. Revisa tu conexión y vuelve a tocar el botón.';
       });
