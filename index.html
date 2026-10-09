@@ -260,6 +260,7 @@
       .then(function (d) {
         if (!d || !d.ok) throw new Error('respuesta');
         window.recordarNombre(datos.nombre);
+        window.recordarOrigen(datos.origen);
         // Meta: dejo datos validos. Este es el evento que optimiza la pauta.
         fbOnce('track', 'Lead', { content_name: '3_guias', value: 0, currency: 'USD' });
         fbOnce('track', 'CompleteRegistration', { content_name: '3_guias', value: 0, currency: 'USD' });

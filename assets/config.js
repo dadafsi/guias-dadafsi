@@ -77,3 +77,12 @@ window.recordarNombre = function (n) {
 window.nombreGuardado = function () {
   try { return sessionStorage.getItem('dadafsi_nombre') || ''; } catch (e) { return ''; }
 };
+
+/* Guarda el origen del lead (ads, instagram, tiktok…) para pasárselo al bot
+   en el enlace de la llamada, y así saber en la hoja del bot de dónde vino. */
+window.recordarOrigen = function (o) {
+  try { sessionStorage.setItem('dadafsi_origen', String(o || '').trim().toLowerCase().slice(0, 40)); } catch (e) {}
+};
+window.origenGuardado = function () {
+  try { return sessionStorage.getItem('dadafsi_origen') || ''; } catch (e) { return ''; }
+};

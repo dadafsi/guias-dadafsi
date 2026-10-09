@@ -87,7 +87,14 @@
   }
 
   var btn = document.getElementById('llamada');
-  btn.href = window.LLAMADA_URL || 'https://dadafsi.netlify.app/?src=guias';
+  // Pasa el origen original al bot: si vino del anuncio (?src=ads) el bot lo
+  // recibe como ?src=guias-ads; si no hay origen, queda en ?src=guias.
+  var o = (window.origenGuardado && window.origenGuardado()) || '';
+  if (o) {
+    btn.href = 'https://dadafsi.netlify.app/?src=' + encodeURIComponent('guias-' + o);
+  } else {
+    btn.href = window.LLAMADA_URL || 'https://dadafsi.netlify.app/?src=guias';
+  }
   btn.addEventListener('click', function () {
     // Esto NO es Schedule. Schedule lo dispara el bot cuando la cita existe de verdad.
     if (typeof fbq === 'function') fbq('trackCustom', 'ClicLlamada', { content_name: 'llamada_ayuda' });
