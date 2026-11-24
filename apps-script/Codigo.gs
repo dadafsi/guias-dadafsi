@@ -118,7 +118,7 @@ function guardarTestimonio_(d) {
       '★'.repeat(estrellas) + ' (' + estrellas + ')',
       comentario,
       publicar,
-      publicar === 'Con nombre' ? limpiar_(d.nombre, 40) : '',
+      limpiar_(d.nombre, 40),   // siempre: es el nombre del formulario; 'Publicar' dice si se puede mostrar
       publicar === 'No publicar' ? '' : edad,
       limpiar_(d.pais, 40),
       limpiar_(d.correo, 120).toLowerCase(),
