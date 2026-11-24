@@ -32,6 +32,9 @@ function doPost(e) {
   let d;
   try { d = JSON.parse(e.postData.contents); } catch (err) { return json_({ ok: false, estado: 'datos_invalidos' }); }
 
+  // Calificación de la página de gracias → pestaña "Testimonios"
+  if (d.tipo === 'testimonio') return guardarTestimonio_(d);
+
   const nombre = limpiar_(d.nombre, 80);
   const correo = limpiar_(d.correo, 120).toLowerCase();
   const whatsapp = limpiar_(d.whatsapp, 20);
@@ -82,6 +85,50 @@ function doPost(e) {
   }
 
   return json_({ ok: true, estado: 'registrado' });
+}
+
+/* ---------- Testimonios ---------- */
+const PESTANA_TESTIMONIOS = 'Testimonios';
+const COLUMNAS_T = ['Fecha', 'Estrellas', 'Comentario', 'Publicar', 'Nombre', 'Edad', 'País', 'Correo', 'Origen', 'Usado en historias'];
+
+function guardarTestimonio_(d) {
+  const estrellas = Math.round(Number(d.estrellas));
+  const comentario = limpiar_(d.comentario, 600);
+  if (!(estrellas >= 1 && estrellas <= 5) || comentario.length < 3) return json_({ ok: false, estado: 'datos_invalidos' });
+  const publicar = ['Con nombre', 'Anónimo', 'No publicar'].indexOf(d.publicar) !== -1 ? d.publicar : 'No publicar';
+  const edad = String(d.edad || '').replace(/\D/g, '').slice(0, 2);
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const libro = SpreadsheetApp.openById(SHEET_ID);
+    let hoja = libro.getSheetByName(PESTANA_TESTIMONIOS);
+    if (!hoja) {
+      hoja = libro.insertSheet(PESTANA_TESTIMONIOS);
+      hoja.getRange(1, 1, 1, COLUMNAS_T.length).setValues([COLUMNAS_T])
+        .setBackground('#1C1612').setFontColor('#D4B98C').setFontWeight('bold');
+      hoja.setFrozenRows(1);
+      hoja.setColumnWidths(1, COLUMNAS_T.length, 120);
+      hoja.setColumnWidth(3, 380);
+      hoja.getRange('C:C').setWrap(true);
+      hoja.getRange(1, COLUMNAS_T.length).setBackground('#3A2E24'); // la llenas tú
+    }
+    hoja.appendRow([
+      Utilities.formatDate(new Date(), 'America/Bogota', 'yyyy-MM-dd HH:mm'),
+      '★'.repeat(estrellas) + ' (' + estrellas + ')',
+      comentario,
+      publicar,
+      limpiar_(d.nombre, 40),   // siempre: es el nombre del formulario; 'Publicar' dice si se puede mostrar
+      publicar === 'No publicar' ? '' : edad,
+      limpiar_(d.pais, 40),
+      limpiar_(d.correo, 120).toLowerCase(),
+      limpiar_(d.origen, 40),
+      ''
+    ].map(celdaSegura_));
+  } finally {
+    lock.releaseLock();
+  }
+  return json_({ ok: true, estado: 'testimonio_guardado' });
 }
 
 /* ---------- Internas ---------- */

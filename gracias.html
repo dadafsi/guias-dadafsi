@@ -27,13 +27,51 @@
     </section>
 
     <h1 id="titular">Listo. Tus 3 guías ya están aquí.</h1>
-    <p class="intro">Sigue los dos pasos de abajo. El segundo es el que de verdad mueve tu caso.</p>
+    <p class="intro">Sigue los tres pasos de abajo. El último es el que de verdad mueve tu caso.</p>
 
     <h2>Paso 1 — Descarga tus guías</h2>
     <div class="botones" id="descargas"></div>
     <p class="aviso" id="avisoDescargas" role="status" aria-live="polite"></p>
 
-    <h2>Paso 2 — Tu caso en concreto</h2>
+    <h2>Paso 2 — ¿Qué te parecieron?</h2>
+    <section class="califica" id="califica" aria-label="Califica las guías">
+      <div id="calForm">
+        <div class="califica__estrellas" id="estrellas" role="radiogroup" aria-label="Calificación de 1 a 5">
+          <button type="button" class="califica__estrella" data-v="1" aria-label="1 estrella">★</button>
+          <button type="button" class="califica__estrella" data-v="2" aria-label="2 estrellas">★</button>
+          <button type="button" class="califica__estrella" data-v="3" aria-label="3 estrellas">★</button>
+          <button type="button" class="califica__estrella" data-v="4" aria-label="4 estrellas">★</button>
+          <button type="button" class="califica__estrella" data-v="5" aria-label="5 estrellas">★</button>
+        </div>
+        <p class="califica__ayuda" id="calAyuda">Toca las estrellas. Te toma 20 segundos.</p>
+
+        <div class="califica__paso" id="calCaja">
+          <label class="califica__q" for="calTexto" id="calPregunta">¿Qué te pareció?</label>
+          <textarea class="califica__texto" id="calTexto" rows="4" maxlength="600" placeholder="Cuéntalo con tus palabras…"></textarea>
+
+          <div id="calPublicar">
+            <div class="califica__opciones">
+              <label class="califica__opc"><input type="radio" name="pub" value="Con nombre"> Se puede publicar con mi nombre</label>
+              <label class="califica__opc"><input type="radio" name="pub" value="Anónimo" checked> Se puede publicar, pero anónimo</label>
+              <label class="califica__opc"><input type="radio" name="pub" value="No publicar"> Prefiero que no se publique</label>
+            </div>
+            <div class="califica__datos" id="calDatos">
+              <input type="text" id="calEdad" inputmode="numeric" maxlength="2" placeholder="Edad">
+            </div>
+          </div>
+
+          <button type="button" class="boton califica__enviar" id="calEnviar">ENVIAR</button>
+          <p class="aviso" id="calAviso" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="califica__gracias" id="calGracias" hidden>
+        <div class="califica__estrellas califica__estrellas--fijas" id="calFijas" aria-hidden="true"></div>
+        <p class="califica__q">Gracias. Lo leo yo personalmente.</p>
+      </div>
+    </section>
+
+    <h2>Paso 3 — Tu caso en concreto</h2>
     <p class="intro">¿Sientes que leer las guías no es suficiente porque necesitas contarle tu caso a alguien que sepa exactamente qué mirar?</p>
     <p class="intro intro--suave">Agenda una llamada de ayuda gratuita conmigo. Me cuentas qué pasó con esa chica o qué se te está dificultando con las mujeres, revisamos tu situación y te digo exactamente qué hacer a continuación.</p>
 
@@ -98,6 +136,82 @@
   btn.addEventListener('click', function () {
     // Esto NO es Schedule. Schedule lo dispara el bot cuando la cita existe de verdad.
     if (typeof fbq === 'function') fbq('trackCustom', 'ClicLlamada', { content_name: 'llamada_ayuda' });
+  });
+
+  /* ---------- Paso 2: calificación + comentario → pestaña "Testimonios" ---------- */
+  var nota = 0;
+  var estrellas = [].slice.call(document.querySelectorAll('#estrellas .califica__estrella'));
+  var cajaCal = document.getElementById('calCaja');
+  var publicar = document.getElementById('calPublicar');
+  var pregunta = document.getElementById('calPregunta');
+  var texto = document.getElementById('calTexto');
+  var datosPub = document.getElementById('calDatos');
+  var enviar = document.getElementById('calEnviar');
+  var avisoCal = document.getElementById('calAviso');
+
+  estrellas.forEach(function (s) {
+    s.addEventListener('click', function () {
+      nota = +s.getAttribute('data-v');
+      estrellas.forEach(function (x) { x.classList.toggle('on', +x.getAttribute('data-v') <= nota); });
+      document.getElementById('calAyuda').style.display = 'none';
+      cajaCal.classList.add('abierto');
+      var buena = nota >= 4;
+      publicar.style.display = buena ? 'block' : 'none';
+      pregunta.textContent = buena ? '¿Qué te pareció? ¿Qué te llevas?' : '¿Qué faltó? Dímelo sin filtro, esto solo lo leo yo.';
+    });
+  });
+
+  function revisarPub() {
+    var v = (document.querySelector('input[name=pub]:checked') || {}).value;
+    datosPub.style.display = v === 'No publicar' ? 'none' : 'grid';
+  }
+  [].slice.call(document.querySelectorAll('input[name=pub]')).forEach(function (r) { r.addEventListener('change', revisarPub); });
+  revisarPub();
+
+  enviar.addEventListener('click', function () {
+    if (!nota) return;
+    if (texto.value.trim().length < 3) {
+      avisoCal.className = 'aviso aviso--error';
+      avisoCal.textContent = 'Escribe aunque sea una línea en la cajita.';
+      texto.focus();
+      return;
+    }
+    var buena = nota >= 4;
+    var pub = buena ? (document.querySelector('input[name=pub]:checked') || {}).value : 'No publicar';
+    var lead = (window.leadGuardado && window.leadGuardado()) || {};
+    var datos = {
+      tipo: 'testimonio',
+      estrellas: nota,
+      comentario: texto.value.trim(),
+      publicar: pub,
+      nombre: n || '',
+      edad: pub === 'No publicar' ? '' : document.getElementById('calEdad').value.replace(/\D/g, ''),
+      pais: lead.pais || '',
+      correo: lead.correo || '',
+      origen: 'guias-gracias'
+    };
+    enviar.disabled = true;
+    enviar.textContent = 'Enviando…';
+    var C = window.CLASE || {};
+    fetch(C.SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(datos)
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || !d.ok) throw new Error('respuesta');
+        if (typeof fbq === 'function') fbq('trackCustom', 'Califico', { estrellas: nota });
+        document.getElementById('calForm').hidden = true;
+        document.getElementById('calFijas').textContent = '★★★★★'.slice(0, nota);
+        document.getElementById('calGracias').hidden = false;
+      })
+      .catch(function () {
+        enviar.disabled = false;
+        enviar.textContent = 'ENVIAR';
+        avisoCal.className = 'aviso aviso--error';
+        avisoCal.textContent = 'No se pudo enviar. Revisa tu conexión y vuelve a tocar el botón.';
+      });
   });
 })();
 </script>

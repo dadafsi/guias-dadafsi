@@ -86,3 +86,16 @@ window.recordarOrigen = function (o) {
 window.origenGuardado = function () {
   try { return sessionStorage.getItem('dadafsi_origen') || ''; } catch (e) { return ''; }
 };
+
+/* Guarda correo y país para unir la calificación de la página de gracias con el lead */
+window.recordarLead = function (correo, pais) {
+  try {
+    sessionStorage.setItem('dadafsi_correo', String(correo || '').slice(0, 120));
+    sessionStorage.setItem('dadafsi_pais', String(pais || '').slice(0, 40));
+  } catch (e) {}
+};
+window.leadGuardado = function () {
+  try {
+    return { correo: sessionStorage.getItem('dadafsi_correo') || '', pais: sessionStorage.getItem('dadafsi_pais') || '' };
+  } catch (e) { return { correo: '', pais: '' }; }
+};
